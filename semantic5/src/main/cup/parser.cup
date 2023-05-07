@@ -1,0 +1,75 @@
+package udv.compi;
+
+import java_cup.runtime.*;
+
+class Parser;
+
+terminal LLA, LLC, CA, CC, DP, COMMA, COMILLA, PLUS, PRO;
+terminal String VAL, ID;
+terminal String NUM;
+
+non terminal noTerminal S, L, LP, V, E, T, F;
+
+start with S;
+
+S ::= L:l{:
+		System.out.println("ids: "+l.getCont_id());
+		System.out.println("concatenación: "+l.getConcat());
+		
+		System.out.println("números: "+l.getCont_num());	
+		System.out.println("suma: "+l.getSuma());
+	:};
+
+L ::= L:l1 COMMA V:v{:
+		noTerminal aux = new noTerminal();
+		int id = l1.getCont_id() + v.getCont_id();
+		int num = l1.getCont_num() + v.getCont_num();
+		String concat ="";
+		int suma =0;
+		if(v.getSuma()==0){
+			concat = l1.getConcat() + v.getConcat();
+			suma = l1.getSuma();
+		}else{
+			concat = l1.getConcat();
+			suma = l1.getSuma()+v.getSuma();
+		}
+		aux.setSuma(suma);
+		aux.setConcat(concat);
+		
+		aux.setCont_id(id);
+		aux.setCont_num(num);
+		RESULT = aux;
+	:}
+	|V:v{:
+		noTerminal aux = new noTerminal();
+		aux.setCont_id(v.getCont_id());
+		aux.setCont_num(v.getCont_num());
+		aux.setSuma(v.getSuma());
+		aux.setConcat(v.getConcat());
+		
+		RESULT = aux;
+	:};
+	
+V ::= NUM:num{:
+		noTerminal aux = new noTerminal();
+		aux.setCont_id(0);
+		aux.setCont_num(1);
+		aux.setSuma(Integer.parseInt(num));
+		aux.setConcat("");
+		
+		RESULT = aux;
+	:}
+	|ID:id{:
+		noTerminal aux = new noTerminal();
+		aux.setCont_id(1);
+		aux.setCont_num(0);
+		aux.setSuma(0);
+		aux.setConcat(id);
+		
+		RESULT = aux;
+	:};
+	
+	
+
+
+
